@@ -1,6 +1,15 @@
 #!/bin/sh
 
 iid=$1
+link_path="$ITEM_PATH/link"
+
+if test -f "$link_path"; then
+	iid="`awk '{print $1}' $link_path`"
+	link_bm="`awk '{print $2}' $link_path`"
+	ITEM_PATH=$DOCUMENT_ROOT/items/poem/items/$iid
+	HTTP_PARAM_g=$link_bm
+fi
+
 poem_path=$ITEM_PATH
 comments_path="$poem_path/comments.txt"
 
@@ -20,8 +29,13 @@ cat - > $DOCUMENT_ROOT/tmp/fun <<!
 <div class='tac cf15 tsxl'>`counter_inc $poem_path/counter.txt`</div>
 !
 
+g="$HTTP_PARAM_g"
+#test ! -z "$g" || g="bm-sun"
+
+n=`grep -n "$g" $ITEM_PATH | head -n 1 | tr ':' ' ' | awk '{print $1}'`
+
 cat - <<!
-<pre>`cat $ITEM_PATH`</pre>
+<pre>`tail -n +$n $ITEM_PATH`</pre>
 <div>
 <form action="$iid" method="post" class="h f fic">
 	<input type="hidden" name="iid" value="$iid"></input>
