@@ -5,9 +5,9 @@ link_path="$ITEM_PATH/link"
 
 if test -f "$link_path"; then
 	iid="`awk '{print $1}' $link_path`"
-	link_bm="`awk '{print $2}' $link_path`"
+	link_g="`awk '{print $2}' $link_path`"
+	link_f="`awk '{print $3}' $link_path`"
 	ITEM_PATH=$DOCUMENT_ROOT/items/poem/items/$iid
-	HTTP_PARAM_g=$link_bm
 fi
 
 poem_path=$ITEM_PATH
@@ -29,13 +29,20 @@ cat - > $DOCUMENT_ROOT/tmp/fun <<!
 <div class='tac cf15 tsxl'>`counter_inc $poem_path/counter.txt`</div>
 !
 
-g="$HTTP_PARAM_g"
+test -z "$HTTP_PARAM_g" || link_g="$HTTP_PARAM_g"
+test -z "$HTTP_PARAM_f" || link_f="$HTTP_PARAM_f"
 #test ! -z "$g" || g="bm-sun"
 
-n=`grep -n "$g" $ITEM_PATH | head -n 1 | tr ':' ' ' | awk '{print $1}'`
+link_g=`grep -n "$link_g" $ITEM_PATH | head -n 1 | tr ':' ' ' | awk '{print $1}'`
+link_f=`grep -n "$link_f" $ITEM_PATH | head -n 1 | tr ':' ' ' | awk '{print $1}'`
+link_d=`math $link_f - $link_g`
+
+may_head() {
+	test $link_d -ge 1 && head -n $link_d || cat
+}
 
 cat - <<!
-<pre>`tail -n +$n $ITEM_PATH`</pre>
+<pre>`tail -n +$link_g $ITEM_PATH | may_head`</pre>
 <div>
 <form action="$iid" method="post" class="h f fic">
 	<input type="hidden" name="iid" value="$iid"></input>
