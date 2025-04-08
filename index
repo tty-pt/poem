@@ -1,6 +1,7 @@
 #!/bin/sh
 
-iid=$1
+set -- `echo $DOCUMENT_URI | tr '/' ' '`
+iid=$2
 link_path="$ITEM_PATH/link"
 
 if test -f "$link_path"; then
@@ -43,7 +44,7 @@ may_head() {
 }
 
 cat - <<!
-<object type="text/html" data="./$lang.html#$HTTP_PARAM_s" class="sf fg"></object>
+<object type="text/html" data="/poem/$iid/$lang.html#$HTTP_PARAM_s" class="sf fg"></object>
 !
 
 exit 0
