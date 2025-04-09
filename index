@@ -44,7 +44,7 @@ may_head() {
 }
 
 cat - <<!
-<object type="text/html" data="/poem/$iid/$lang.html#$HTTP_PARAM_s" class="sf fg"></object>
+<object type="text/html" data="/poem/$iid/$lang.html?v=`date +%s`#$HTTP_PARAM_s" class="sf fg"></object>
 !
 
 exit 0
