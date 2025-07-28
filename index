@@ -1,6 +1,7 @@
 #!/bin/sh
 
 set -- `echo $DOCUMENT_URI | tr '/' ' '`
+ITEM_PATH=$DOCUMENT_ROOT/items/poem/items/$iid
 iid=$2
 link_path="$ITEM_PATH/link"
 
@@ -12,13 +13,13 @@ if test -f "$link_path"; then
 fi
 
 poem_path=$ITEM_PATH
-comments_path="$poem_path/comments.txt"
+# comments_path="$poem_path/comments.txt"
 
-if test "$REQUEST_METHOD" == "POST"; then
-	test ! -z "$REMOTE_USER" || Unauthorized
-	echo $REMOTE_USER: "`urldecode "$comment"`" | fappend $comments_path
-	_see_other $iid\#comments
-fi
+# if test "$REQUEST_METHOD" == "POST"; then
+# 	test ! -z "$REMOTE_USER" || Unauthorized
+# 	echo $REMOTE_USER: "`urldecode "$comment"`" | fappend $comments_path
+# 	_see_other $iid\#comments
+# fi
 
 touch $DOCUMENT_ROOT/tmp/notitle
 ITEM_PATH="$poem_path/pt_PT.html"
@@ -26,9 +27,9 @@ ITEM_PATH="$poem_path/pt_PT.html"
 new_item_path="$poem_path/$lang.html"
 test ! -f $new_item_path || ITEM_PATH=$new_item_path
 
+# `RB 💬 '#comments'`
 cat - > $DOCUMENT_ROOT/tmp/fun <<!
-`RB 💬 '#comments'`
-<div class='tac cf15 tsxl'>`counter_inc $poem_path/counter.txt`</div>
+<div class='tac v f cf15 tsxl'>`counter_inc $poem_path/counter.txt`</div>
 !
 
 test -z "$HTTP_PARAM_g" || link_g="$HTTP_PARAM_g"
@@ -48,6 +49,7 @@ cat - <<!
 !
 
 exit 0
+
 cat - <<!
 <div>
 <form action="$iid" method="post" class="h f fic">
