@@ -1,8 +1,8 @@
 #!/bin/sh
 
 set -- `echo $DOCUMENT_URI | tr '/' ' '`
+_TITLE="`cat title`"
 ITEM_PATH=$DOCUMENT_ROOT/items/poem/items/$iid
-iid=$2
 link_path="$ITEM_PATH/link"
 
 if test -f "$link_path"; then
@@ -13,13 +13,6 @@ if test -f "$link_path"; then
 fi
 
 poem_path=$ITEM_PATH
-# comments_path="$poem_path/comments.txt"
-
-# if test "$REQUEST_METHOD" == "POST"; then
-# 	test ! -z "$REMOTE_USER" || Unauthorized
-# 	echo $REMOTE_USER: "`urldecode "$comment"`" | fappend $comments_path
-# 	_see_other $iid\#comments
-# fi
 
 touch $DOCUMENT_ROOT/tmp/notitle
 ITEM_PATH="$poem_path/pt_PT.html"
@@ -27,14 +20,12 @@ ITEM_PATH="$poem_path/pt_PT.html"
 new_item_path="$poem_path/$lang.html"
 test ! -f $new_item_path || ITEM_PATH=$new_item_path
 
-# `RB 💬 '#comments'`
 cat - > $DOCUMENT_ROOT/tmp/fun <<!
 <div class='tac v f cf15 tsxl'>`counter_inc $poem_path/counter.txt`</div>
 !
 
 test -z "$HTTP_PARAM_g" || link_g="$HTTP_PARAM_g"
 test -z "$HTTP_PARAM_f" || link_f="$HTTP_PARAM_f"
-#test ! -z "$g" || g="bm-sun"
 
 link_g=`grep -n "$link_g" $ITEM_PATH | head -n 1 | tr ':' ' ' | awk '{print $1}'`
 link_f=`grep -n "$link_f" $ITEM_PATH | head -n 1 | tr ':' ' ' | awk '{print $1}'`
@@ -46,16 +37,4 @@ may_head() {
 
 cat - <<!
 <object type="text/html" data="/poem/$iid/$lang.html?v=`date +%s`#$HTTP_PARAM_s" class="sf fg"></object>
-!
-
-exit 0
-
-cat - <<!
-<div>
-<form action="$iid" method="post" class="h f fic">
-	<input type="hidden" name="iid" value="$iid"></input>
-	<input class="fg" name="comment"></input>
-</form>
-</div>
-<pre id="comments">`cat $comments_path | revlines | no_html`</pre>
 !
