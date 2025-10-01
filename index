@@ -20,10 +20,6 @@ ITEM_PATH="$poem_path/pt_PT.html"
 new_item_path="$poem_path/$lang.html"
 test ! -f $new_item_path || ITEM_PATH=$new_item_path
 
-cat - > $DOCUMENT_ROOT/tmp/fun <<!
-<div class='tac v f cf15 tsxl'>`counter_inc $poem_path/counter.txt`</div>
-!
-
 test -z "$HTTP_PARAM_g" || link_g="$HTTP_PARAM_g"
 test -z "$HTTP_PARAM_f" || link_f="$HTTP_PARAM_f"
 
@@ -35,6 +31,6 @@ may_head() {
 	test $link_d -ge 1 && head -n $link_d || cat
 }
 
-cat - <<!
-<object type="text/html" data="/poem/$iid/$lang.html?v=`date +%s`#$HTTP_PARAM_s" class="sf fg"></object>
-!
+echo "<div>"
+cat $poem_path/$lang.html
+echo "</div>"
